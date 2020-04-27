@@ -1,0 +1,71 @@
+[tool.black]
+line-length = 120
+include = '\.pyi?$'
+exclude = '''
+(
+  /(
+      \.eggs         # exclude a few common directories in the
+    | \.git          # root of the project
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | buck-out
+    | build
+    | dist
+  )/
+  | docs/build/
+  | node_modules/
+  | venve/
+  | .venv/
+)
+'''
+
+[tool.poetry]
+name = "lipo"
+readme = 'README.md'  # Markdown files are supported
+version = "1.0.0"
+
+authors = ["Jan Beitner"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3"]
+
+description = "Global, derivative-free optimization"
+repository = "https://github.com/jdb78/lipo"
+
+[tool.poetry.dependencies]
+python = "^3.6"
+
+scikit-learn = ">=0.22.1"
+dlib = "^19.19.0"
+
+[tool.poetry.dev-dependencies]
+
+mypy = "*"
+wheel = "*"
+flake8 = "*"
+pylint = "*"
+isort = "*"
+
+pytest = "<5.4.0"  # pytest sugar is not compatible
+pytest-xdist = "*"
+pytest-cov = "*"
+pytest-sugar = "*"
+coverage = "*"
+
+# documentatation
+sphinx = "*"
+m2r = "*"
+sphinx-autobuild = "*"
+nbsphinx = "*"
+pydata-sphinx-theme = "*"
+
+
+[build-system]  # make the package pip installable
+requires = ["poetry>=1.0.5"]
+build-backend = "poetry.masonry.api"
+

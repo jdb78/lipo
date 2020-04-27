@@ -1,0 +1,145 @@
+#The following includes the directory structure under /data, but ignores files (except the empty .gitkeep files whose only purpose is to include the directory structure (git does not allow empty directories to be added)).
+# exclude note
+**/node_modules/**
+#Re-include .gitkeep files:
+!.gitkeep
+
+
+#Binary files
+*.pdf
+*.xlsm
+*.xlsx
+*.pptx
+#*.csv
+*.dsv
+*.csv.gz
+*.gz
+*.zip
+*.db
+# *.png
+*.msg
+*.p
+
+#Tableau directory
+tableau/
+
+#Log
+log/
+
+
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+env/
+#build/
+develop-eggs/
+dist/
+!/static/dist/
+downloads/
+*egg-info
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+.installed.cfg
+.egg-info
+*.dist-info/
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+#PyCharm
+*.idea
+
+.mypy_cache/
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+.pycache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+test-reports/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/build/
+.DS_Store
+flask_session/
+
+# PyBuilder
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# celery beat schedule file
+celerybeat-schedule
+
+# SageMath parsed files
+*.sage.py
+
+# dotenv
+.env
+
+# virtualenv
+.venv
+venv/
+ENV/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+!/docs/source/_static/.gitkeep
+
+.venv
+.vscode
