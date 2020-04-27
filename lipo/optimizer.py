@@ -1,23 +1,30 @@
 """
 The optimization module
 """
-import math
 from typing import Dict, List, Union, Callable, Tuple
+import math
+import logging
+
 import dlib
+
+logger = logging.getLogger(__name__)
 
 
 class EvaluationCandidate:
-    def __init__(self, candidate, arg_names, categories, log_args, maximize):
+    def __init__(self, candidate, arg_names, categories, log_args, maximize, is_integer):
         self.candidate = candidate
         self.arg_names = arg_names
         self.maximize = maximize
         self.log_args = log_args
         self.categories = categories
+        self.is_integer = is_integer
 
     @property
     def x(self):
         x = {}
         for name, val in zip(self.arg_names, self.candidate.x):
+            if self.is_integer[name]:
+                val = int(val)
             if name in self.categories:
                 x[name] = self.categories[name][val]
             elif name in self.log_args:
@@ -48,8 +55,8 @@ class GlobalOptimizer:
         upper_bounds: Dict[str, Union[float, int]],
         categories: Dict[str, List[str]],
         log_args: Union[str, List[str]] = "auto",
-        flexible_bound_threshold: float = 0.1,
-        evaluations: List[Tuple[Dict[str], float]] = [],
+        flexible_bound_threshold: float = 0.05,
+        evaluations: List[Tuple[Dict[str, Union[float, int, str]], float]] = [],
         maximize: bool = True,
     ):
         """
@@ -81,9 +88,12 @@ class GlobalOptimizer:
             assert (is_lower_integer and is_upper_integer) or (
                 not is_lower_integer and not is_upper_integer
             ), f"Argument {name} must be either integer or not integer"
+            assert (
+                lower_bounds[name] < upper_bounds[name]
+            ), f"Lower bound should be smaller than upper bound for argument {name}"
 
         self.categories = categories
-        self.arg_names = [list(upper_bounds.keys()) + list(self.categories.keys())]
+        self.arg_names = list(upper_bounds.keys()) + list(self.categories.keys())
 
         # set bounds
         self.lower_bounds = lower_bounds
@@ -93,7 +103,7 @@ class GlobalOptimizer:
             self.upper_bounds[name] = len(cats) - 1
 
         # infer if variable is integer
-        self.is_integer = {name: isinstance(self.lower_bounds.get(name, 0), int) for name in self.arg_names}
+        self.is_integer = {name: isinstance(self.lower_bounds[name], int) for name in self.arg_names}
 
         # set arguemnts in log space
         if isinstance(log_args, str) and log_args == "auto":
@@ -105,10 +115,15 @@ class GlobalOptimizer:
                     and self.lower_bounds[name] > 0
                 ):
                     self.log_args.append(name)
-                    self.lower_bounds[name] = math.log(self.lower_bounds[name])
-                    self.upper_bounds[name] = math.log(self.upper_bounds[name])
         else:
             self.log_args = log_args
+        # transform bounds
+        for name in self.log_args:
+            assert name not in self.categories, f"Log-space is not defined for categoricals such as {name}"
+            assert not self.is_integer[name], f"Log-space is not defined for integer variables such as {name}"
+            assert self.lower_bounds[name] > 0, f"Log-space is only defined for positive lower bounds"
+            self.lower_bounds[name] = math.log(self.lower_bounds[name])
+            self.upper_bounds[name] = math.log(self.upper_bounds[name])
 
         # check log args
         for name in self.log_args:
@@ -118,7 +133,7 @@ class GlobalOptimizer:
         self.init_evaluations = []
         for x, y in evaluations:
             e = {}
-            for name, val in x.keys():
+            for name, val in x.items():
                 if name in self.categories:
                     e[name] = self.categories[name].index(val)
                 elif name in self.log_args:
@@ -146,7 +161,7 @@ class GlobalOptimizer:
         self.search = dlib.global_function_search(
             functions=[function_spec],
             initial_function_evals=[
-                [dlib.function_evaluation([x[0][name] for name in self.arg_names], x[1]) for x in self.evaluations]
+                [dlib.function_evaluation([x[0][name] for name in self.arg_names], x[1]) for x in self._raw_evaluations]
             ],
             relative_noise_magnitude=0.001,
         )
@@ -184,16 +199,34 @@ class GlobalOptimizer:
 
                     if (val - lower) / span <= self.flexible_bound_threshold:
                         # center value
-                        self.lower_bounds[name] = val - (upper - val)
-                        # redefine bounds
-                        reinit = True
+                        proposed_val = val - (upper - val)
+                        # limit change in log space
+                        if name in self.log_args:
+                            proposed_val = max(self.upper_bounds[name] - 2, proposed_val, -15)
+
+                        if proposed_val < self.lower_bounds[name]:
+                            self.lower_bounds[name] = proposed_val
+                            # restart search
+                            reinit = True
+
                     elif (upper - val) / span <= self.flexible_bound_threshold:
                         # center value
-                        self.upper_bounds[name] = val + (val - lower)
-                        # redefine bounds
-                        reinit = True
+                        proposed_val = val + (val - lower)
+                        # limit log space redefinition
+                        if name in self.log_args:
+                            proposed_val = min(self.upper_bounds[name] + 2, proposed_val, 15)
+
+                        if proposed_val > self.upper_bounds[name]:
+                            self.upper_bounds[name] = proposed_val
+                            # restart search
+                            reinit = True
+
+                    if self.is_integer[name]:
+                        self.lower_bounds[name] = int(self.lower_bounds[name])
+                        self.upper_bounds[name] = int(self.upper_bounds[name])
 
                 if reinit:  # reinitialize optimization with new bounds
+                    logger.debug(f"resetting bounds to {self.lower_bounds} to {self.upper_bounds}")
                     self._init_search()
 
         return EvaluationCandidate(
@@ -202,7 +235,19 @@ class GlobalOptimizer:
             categories=self.categories,
             maximize=self.maximize,
             log_args=self.log_args,
+            is_integer=self.is_integer,
         )
+
+    @property
+    def _raw_evaluations(self):
+        if hasattr(self, "search"):
+            evals = [
+                ({name: val for name, val in zip(self.arg_names, e.x)}, e.y)
+                for e in self.search.get_function_evaluations()[1][0]
+            ]
+        else:
+            evals = self.init_evaluations
+        return evals
 
     @property
     def evaluations(self):
@@ -212,19 +257,13 @@ class GlobalOptimizer:
         Returns:
             List[Tuple[Dict[str], float]]]: list of x and y value pairs
         """
-        if hasattr(self, "search"):
-            evals = [
-                ({name: e.x[name] for name in self.arg_names}, e.y)
-                for e in self.search.get_function_evaluations()[1][0]
-            ]
-        else:
-            evals = self.init_evaluations
-
         # convert log space and categories
         converted_evals = []
-        for x, y in evals:
+        for x, y in self._raw_evaluations:
             e = {}
             for name, val in x.items():
+                if self.is_integer[name]:
+                    val = int(val)
                 if name in self.categories:
                     e[name] = self.categories[name][val]
                 elif name in self.log_args:
@@ -245,6 +284,8 @@ class GlobalOptimizer:
         x, y, idx = self.search.get_best_function_eval()
         new_x = {}
         for name, val in zip(self.arg_names, x):
+            if self.is_integer[name]:
+                val = int(val)
             if name in self.categories:
                 new_x[name] = self.categories[name][val]
             elif name in self.log_args:
