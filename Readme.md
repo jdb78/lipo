@@ -1,7 +1,13 @@
 LIPO is a package for derivative-free, global optimization. Is based on
 the `dlib` package and provides wrappers around its optimization routine.
 
-Usage:
+# Installation
+
+Execute
+
+`pip install lipo`
+
+# Usage
 
 ```python
 from lipo import GlobalOptimizer
@@ -27,3 +33,18 @@ search.run(num_function_calls)
 ```
 
 The optimizer will automatically extend the search bounds if necessary.
+
+Further, the package provides an implementation of the scikit-learn interface for 
+hyperparamter search.
+
+```python
+from lipo import LIPOSearchCV
+
+search = LIPOSearchCV(
+    estimator,
+    param_space={"param_1": [0.1, 100], "param_2": ["category_1", "category_2"]},
+    n_iter=100
+)
+search.fit(X, y)
+print(search.best_params_)
+```

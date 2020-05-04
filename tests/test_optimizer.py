@@ -1,5 +1,5 @@
 import math
-from lipo.optimizer import GlobalOptimizer
+from lipo import GlobalOptimizer
 
 
 def test_global_optimization():

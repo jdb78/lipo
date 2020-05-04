@@ -50,20 +50,22 @@ class GlobalOptimizer:
 
     def __init__(
         self,
-        function: Callable,
-        lower_bounds: Dict[str, Union[float, int]],
-        upper_bounds: Dict[str, Union[float, int]],
-        categories: Dict[str, List[str]],
+        function: Union[Callable, None] = None,
+        lower_bounds: Dict[str, Union[float, int]] = {},
+        upper_bounds: Dict[str, Union[float, int]] = {},
+        categories: Dict[str, List[str]] = {},
         log_args: Union[str, List[str]] = "auto",
         flexible_bound_threshold: float = 0.05,
         evaluations: List[Tuple[Dict[str, Union[float, int, str]], float]] = [],
         maximize: bool = True,
+        epsilon=0.0,
+        random_state=None,
     ):
         """
         Init optimizer
 
         Args:
-            function (callable):
+            function (callable): function to optimize
             lower_bounds (Dict[str]): lower bounds of optimization, integer arguments are automatically inferred
             upper_bounds (Dict[str]): upper bounds of optimization, integer arguments are automatically inferred
             log_args (Union[str, List[str]): list of arguments to treat as if in log space, if "auto", then
@@ -77,8 +79,12 @@ class GlobalOptimizer:
                 ``flexible_bound_threshold`` quantile
             evaluations List[Tuple[Dict[str], float]]: list of tuples of x and y values
             maximize (bool): if to maximize or minimize (default ``True``)
+            epsilon (float): accuracy below which exploration will be priorities vs exploitation; default = 0
+            random_state (Union[None, int]): random state
         """
         self.function = function
+        self.epsilon = epsilon
+        self.random_state = random_state
 
         # check bounds
         assert len(lower_bounds) == len(upper_bounds), "Number of upper and lower bounds should be the same"
@@ -165,8 +171,9 @@ class GlobalOptimizer:
             ],
             relative_noise_magnitude=0.001,
         )
-        self.search.set_solver_epsilon(0.0)
-        self.search.set_seed(214)
+        self.search.set_solver_epsilon(self.epsilon)
+        if self.random_state is not None:
+            self.search.set_seed(self.random_state)
 
     def get_candidate(self):
         """
