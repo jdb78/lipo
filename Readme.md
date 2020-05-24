@@ -8,9 +8,9 @@ optimization.
 The provided implementation has the option to automatically enlarge the search space if bounds are found to be 
 too restrictive (i.e. the optimum being to close to one of them).
 
-See the `LIPO algorithm implementation <http://dlib.net/python/index.html#dlib.find_max_global>`_ for details.
+See the [LIPO algorithm implementation](http://dlib.net/python/index.html#dlib.find_max_global) for details.
 
-A `great blog post <http://blog.dlib.net/2017/12/a-global-optimization-algorithm-worth.html>`_ by the author of 
+A [great blog post](http://blog.dlib.net/2017/12/a-global-optimization-algorithm-worth.html) by the author of 
 `dlib` exists, describing how it works.
 
 # Installation
