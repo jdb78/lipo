@@ -55,6 +55,7 @@ class GlobalOptimizer:
         upper_bounds: Dict[str, Union[float, int]] = {},
         categories: Dict[str, List[str]] = {},
         log_args: Union[str, List[str]] = "auto",
+        flexible_bounds: Dict[str, List[bool]] = {},
         flexible_bound_threshold: float = 0.05,
         evaluations: List[Tuple[Dict[str, Union[float, int, str]], float]] = [],
         maximize: bool = True,
@@ -74,7 +75,8 @@ class GlobalOptimizer:
                 - The lower bound on the variable is > 0
                 - The ratio of the upper bound to lower bound is > 1000
                 - The variable is not an integer variable
-
+            flexible_bounds (Dict[str, List[bool]]): dictionary of parameters and list of booleans indicating
+                if parameters are deemed flexible or not. by default all parameters are deemed flexible
             flexible_bound_threshold (float): if to enlarge bounds if optimum is top or bottom
                 ``flexible_bound_threshold`` quantile
             evaluations List[Tuple[Dict[str], float]]: list of tuples of x and y values
@@ -154,6 +156,7 @@ class GlobalOptimizer:
         # check bound threshold
         assert flexible_bound_threshold < 0.5, "Quantile for bound flexibility has to be below 0.5"
         self.flexible_bound_threshold = flexible_bound_threshold
+        self.flexible_bounds = {name: flexible_bounds.get(name, [True, True]) for name in self.arg_names}
 
         # initialize search object
         self._init_search()
@@ -204,7 +207,8 @@ class GlobalOptimizer:
                     else:
                         val = optimum_args[name]
 
-                    if (val - lower) / span <= self.flexible_bound_threshold:
+                    # redefine lower bound
+                    if (val - lower) / span <= self.flexible_bound_threshold and self.flexible_bounds[name][0]:
                         # center value
                         proposed_val = val - (upper - val)
                         # limit change in log space
@@ -216,7 +220,8 @@ class GlobalOptimizer:
                             # restart search
                             reinit = True
 
-                    elif (upper - val) / span <= self.flexible_bound_threshold:
+                    # redefine upper bound
+                    elif (upper - val) / span <= self.flexible_bound_threshold and self.flexible_bounds[name][1]:
                         # center value
                         proposed_val = val + (val - lower)
                         # limit log space redefinition

@@ -1,6 +1,18 @@
 LIPO is a package for derivative-free, global optimization. Is based on
 the `dlib` package and provides wrappers around its optimization routine.
 
+The algorithm outperforms random search - sometimes by margins as large as 10000x. It is often preferable to 
+Bayesian optimization which requires "tuning of the tuner". Performance is on par with moderately to well tuned Bayesian 
+optimization.
+
+The provided implementation has the option to automatically enlarge the search space if bounds are found to be 
+too restrictive (i.e. the optimum being to close to one of them).
+
+See the `LIPO algorithm implementation <http://dlib.net/python/index.html#dlib.find_max_global>`_ for details.
+
+A `great blog post <http://blog.dlib.net/2017/12/a-global-optimization-algorithm-worth.html>`_ by the author of 
+`dlib` exists, describing how it works.
+
 # Installation
 
 Execute

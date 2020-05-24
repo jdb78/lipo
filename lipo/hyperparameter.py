@@ -30,8 +30,9 @@ class LIPOSearchCV(BaseSearchCV):
         estimator,
         param_space,
         n_iter=10,
-        tolerance=0.0,
         flexible_bound_threshold=0.05,
+        flexible_bounds={},
+        tolerance=0.0,
         random_state=None,
         scoring=None,
         n_jobs=None,
@@ -62,6 +63,10 @@ class LIPOSearchCV(BaseSearchCV):
                 - List of choices to test. List must either contain more than 2 elements or only strings.
 
             n_iter (int): number of iterations for fitting the estimator
+            flexible_bounds (Dict[str, List[bool]]): dictionary of parameters and list of booleans indicating
+                if parameters are deemed flexible or not. by default all parameters are deemed flexible
+            flexible_bound_threshold (float): if to enlarge bounds if optimum is top or bottom
+                ``flexible_bound_threshold`` quantile
             tolerance (float): Skip local search step if accuracy of found maximum is below tolerance.
                 Continue with global search.
             scoring (Union[str, callable, List, Tuple, Dict, None]: as in sklearn.model_selection.GridSearchCV
@@ -78,6 +83,7 @@ class LIPOSearchCV(BaseSearchCV):
         self.param_space = param_space
         self.n_iter = n_iter
         self.tolerance = tolerance
+        self.flexible_bounds = flexible_bounds
         self.flexible_bound_threshold = flexible_bound_threshold
         self.random_state = random_state
 
@@ -111,6 +117,7 @@ class LIPOSearchCV(BaseSearchCV):
             upper_bounds=upper_bounds,
             categories=categories,
             flexible_bound_threshold=self.flexible_bound_threshold,
+            flexible_bounds=self.flexible_bounds,
             epsilon=self.tolerance,
             maximize=True,
             random_state=self.random_state,
