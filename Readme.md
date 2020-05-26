@@ -80,7 +80,7 @@ This is a Bayesian framework.
 
 `-` The exploration of the search space is not systematic, i.e. results can vary a lot from run to run
 
-## [Optuna](https://optunity.readthedocs.io/)
+## [Optuna](https://optuna.readthedocs.io/)
 
 `+` It parallelizes very well
 
