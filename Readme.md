@@ -60,3 +60,38 @@ search = LIPOSearchCV(
 search.fit(X, y)
 print(search.best_params_)
 ```
+
+
+# Comparison to other frameworks
+
+For benchmarks, see the notebook in the `benchmark` directory.
+
+## [scikit-optimize](https://scikit-optimize.github.io/)
+
+This is a Bayesian framework.
+ 
+`+` A well-chosen prior can lead to very good results slightly faster 
+
+`-` If the wrong prior is chosen, tuning can take long
+
+`-` It is not parameter-free - one can get stuck in a local minimum which means tuning of the tuner can be required
+
+`-` LIPO can converge faster when it is close to the minimum using a quadratic approximation
+
+`-` The exploration of the search space is not systematic, i.e. results can vary a lot from run to run
+
+## [Optuna](https://optunity.readthedocs.io/)
+
+`+` It parallelizes very well
+
+`+` It can stop training early. This is very useful, e.g. for neural networks and can speed up tuning
+
+`+` A well-chosen prior can lead to very good results slightly faster 
+
+`-` If the wrong prior is chosen, tuning can take long
+
+`-` It is not parameter-free, i.e. some tuning of the tuner can be required (the defaults are pretty good though)
+
+`-` LIPO can converge faster when it is close to the minimum using a quadratic approximation
+
+`-` The exploration of the search space is not systematic, i.e. results can vary a lot from run to run
