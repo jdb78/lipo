@@ -56,7 +56,7 @@ class GlobalOptimizer:
         categories: Dict[str, List[str]] = {},
         log_args: Union[str, List[str]] = "auto",
         flexible_bounds: Dict[str, List[bool]] = {},
-        flexible_bound_threshold: float = 0.05,
+        flexible_bound_threshold: float = -1.0,
         evaluations: List[Tuple[Dict[str, Union[float, int, str]], float]] = [],
         maximize: bool = True,
         epsilon=0.0,
@@ -119,8 +119,8 @@ class GlobalOptimizer:
             for name in self.arg_names:
                 if (
                     not self.is_integer[name]
-                    and self.upper_bounds[name] / self.lower_bounds[name] > 1e3
                     and self.lower_bounds[name] > 0
+                    and self.upper_bounds[name] / self.lower_bounds[name] > 1e3
                 ):
                     self.log_args.append(name)
         else:

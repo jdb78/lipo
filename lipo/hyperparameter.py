@@ -30,8 +30,9 @@ class LIPOSearchCV(BaseSearchCV):
         estimator,
         param_space,
         n_iter=10,
-        flexible_bound_threshold=0.05,
+        flexible_bound_threshold=-1.0,
         flexible_bounds={},
+        log_args="auto",
         tolerance=0.0,
         random_state=None,
         scoring=None,
@@ -67,6 +68,8 @@ class LIPOSearchCV(BaseSearchCV):
                 if parameters are deemed flexible or not. by default all parameters are deemed flexible
             flexible_bound_threshold (float): if to enlarge bounds if optimum is top or bottom
                 ``flexible_bound_threshold`` quantile
+            log_args (Union[str, List[str]]): list of parameters to be optimized in log space, defaults to rules
+                as described in ``param_space``. Integer variables cannot be in log space.
             tolerance (float): Skip local search step if accuracy of found maximum is below tolerance.
                 Continue with global search.
             scoring (Union[str, callable, List, Tuple, Dict, None]: as in sklearn.model_selection.GridSearchCV
@@ -86,6 +89,7 @@ class LIPOSearchCV(BaseSearchCV):
         self.flexible_bounds = flexible_bounds
         self.flexible_bound_threshold = flexible_bound_threshold
         self.random_state = random_state
+        self.log_args = log_args
 
         super().__init__(
             estimator=estimator,
@@ -118,6 +122,7 @@ class LIPOSearchCV(BaseSearchCV):
             categories=categories,
             flexible_bound_threshold=self.flexible_bound_threshold,
             flexible_bounds=self.flexible_bounds,
+            log_args=self.log_args,
             epsilon=self.tolerance,
             maximize=True,
             random_state=self.random_state,
