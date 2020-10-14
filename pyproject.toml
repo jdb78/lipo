@@ -34,15 +34,17 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3"]
 
-description = "Global, derivative-free optimization"
+description = "Global, derivative- and parameter-free (hyperparameter) optimization"
 repository = "https://github.com/jdb78/lipo"
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = "^3.6.1"
 
 scikit-learn = ">=0.22.1"
 dlib = "^19.19.0"
 tqdm = "^4.46.0"
+
+pytest-github-actions-annotate-failures = {version = "*", optional = true}
 
 [tool.poetry.dev-dependencies]
 
@@ -52,7 +54,7 @@ flake8 = "*"
 pylint = "*"
 isort = "*"
 
-pytest = "<5.4.0"  # pytest sugar is not compatible
+pytest = "*"  # pytest sugar is not compatible
 pytest-xdist = "*"
 pytest-cov = "*"
 pytest-sugar = "*"
@@ -65,8 +67,15 @@ sphinx-autobuild = "*"
 nbsphinx = "*"
 pydata-sphinx-theme = "*"
 
+[tool.poetry.extras]  # extras
+github-actions = ["pytest-github-actions-annotate-failures"]
+
+[tool.poetry-dynamic-versioning]
+enable = true
+vcs = "git"
+dirty = false
+style = "semver"  # semantic versioning
 
 [build-system]  # make the package pip installable
-requires = ["poetry>=1.0.5"]
-build-backend = "poetry.masonry.api"
-
+requires = ["poetry_core>=1.0.0", "poetry-dynamic-versioning>=0.9.0"]
+build-backend = "poetry.core.masonry.api"

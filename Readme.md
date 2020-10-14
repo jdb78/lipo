@@ -1,16 +1,17 @@
-LIPO is a package for derivative-free, global optimization. Is based on
+LIPO is a package for derivative- and parameter-free global optimization, e.g.
+for hyperparameter tuning. Is based on
 the `dlib` package and provides wrappers around its optimization routine.
 
-The algorithm outperforms random search - sometimes by margins as large as 10000x. It is often preferable to 
-Bayesian optimization which requires "tuning of the tuner". Performance is on par with moderately to well tuned Bayesian 
+The algorithm outperforms random search - sometimes by margins as large as 10000x. It is often preferable to
+Bayesian optimization which requires "tuning of the tuner". Performance is on par with moderately to well tuned Bayesian
 optimization.
 
-The provided implementation has the option to automatically enlarge the search space if bounds are found to be 
+The provided implementation has the option to automatically enlarge the search space if bounds are found to be
 too restrictive (i.e. the optimum being to close to one of them).
 
 See the [LIPO algorithm implementation](http://dlib.net/python/index.html#dlib.find_max_global) for details.
 
-A [great blog post](http://blog.dlib.net/2017/12/a-global-optimization-algorithm-worth.html) by the author of 
+A [great blog post](http://blog.dlib.net/2017/12/a-global-optimization-algorithm-worth.html) by the author of
 `dlib` exists, describing how it works.
 
 # Installation
@@ -46,7 +47,7 @@ search.run(num_function_calls)
 
 The optimizer will automatically extend the search bounds if necessary.
 
-Further, the package provides an implementation of the scikit-learn interface for 
+Further, the package provides an implementation of the scikit-learn interface for
 hyperparamter search.
 
 ```python
@@ -61,7 +62,6 @@ search.fit(X, y)
 print(search.best_params_)
 ```
 
-
 # Comparison to other frameworks
 
 For benchmarks, see the notebook in the `benchmark` directory.
@@ -69,8 +69,8 @@ For benchmarks, see the notebook in the `benchmark` directory.
 ## [scikit-optimize](https://scikit-optimize.github.io/)
 
 This is a Bayesian framework.
- 
-`+` A well-chosen prior can lead to very good results slightly faster 
+
+`+` A well-chosen prior can lead to very good results slightly faster
 
 `-` If the wrong prior is chosen, tuning can take long
 
@@ -86,7 +86,7 @@ This is a Bayesian framework.
 
 `+` It can stop training early. This is very useful, e.g. for neural networks and can speed up tuning
 
-`+` A well-chosen prior can lead to very good results slightly faster 
+`+` A well-chosen prior can lead to very good results slightly faster
 
 `-` If the wrong prior is chosen, tuning can take long
 

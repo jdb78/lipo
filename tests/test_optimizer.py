@@ -1,4 +1,5 @@
 import math
+
 from lipo import GlobalOptimizer
 
 

@@ -1,6 +1,7 @@
 import math
+
 import numpy as np
-from sklearn.base import RegressorMixin, BaseEstimator
+from sklearn.base import BaseEstimator, RegressorMixin
 
 from lipo import LIPOSearchCV
 

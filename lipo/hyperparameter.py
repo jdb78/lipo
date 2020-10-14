@@ -1,13 +1,11 @@
 import logging
 
 import numpy as np
-
-from tqdm.autonotebook import tqdm
 from sklearn.model_selection._search import BaseSearchCV
 from sklearn.utils.validation import _deprecate_positional_args
+from tqdm.autonotebook import tqdm
 
 from lipo.optimizer import GlobalOptimizer
-
 
 logger = logging.getLogger(__name__)
 
@@ -52,7 +50,7 @@ class LIPOSearchCV(BaseSearchCV):
             estimator (BaseEstimator): estimator to tune
             param_space (Dict[str, List]): dictionary where keys are names of parameters to tune and
                 values are either
-                
+
                 - List of form [minimum, maximum].
                   If minimum and maximum are integers, search will be limited to integers.
                   Optimization in log space happens automatically, if the bounds satisfy all these conditions:

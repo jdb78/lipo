@@ -1,9 +1,9 @@
 """
 The optimization module
 """
-from typing import Dict, List, Union, Callable, Tuple
-import math
 import logging
+import math
+from typing import Callable, Dict, List, Tuple, Union
 
 import dlib
 
