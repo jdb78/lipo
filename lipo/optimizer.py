@@ -129,7 +129,7 @@ class GlobalOptimizer:
         for name in self.log_args:
             assert name not in self.categories, f"Log-space is not defined for categoricals such as {name}"
             assert not self.is_integer[name], f"Log-space is not defined for integer variables such as {name}"
-            assert self.lower_bounds[name] > 0, f"Log-space is only defined for positive lower bounds"
+            assert self.lower_bounds[name] > 0, f"Log-space for {name} is only defined for positive lower bounds"
             self.lower_bounds[name] = math.log(self.lower_bounds[name])
             self.upper_bounds[name] = math.log(self.upper_bounds[name])
 
