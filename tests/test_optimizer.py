@@ -19,6 +19,7 @@ def test_global_optimization():
         evaluations=evaluations,
         log_args=["x"],
         maximize=True,
+        flexible_bound_threshold=0.1,
     )
 
     num_function_calls = 1000

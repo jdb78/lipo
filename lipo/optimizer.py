@@ -76,7 +76,8 @@ class GlobalOptimizer:
                 - The ratio of the upper bound to lower bound is > 1000
                 - The variable is not an integer variable
             flexible_bounds (Dict[str, List[bool]]): dictionary of parameters and list of booleans indicating
-                if parameters are deemed flexible or not. by default all parameters are deemed flexible
+                if parameters are deemed flexible or not. By default all parameters are deemed flexible but only
+                if `flexible_bound_threshold > 0`.
             flexible_bound_threshold (float): if to enlarge bounds if optimum is top or bottom
                 ``flexible_bound_threshold`` quantile
             evaluations List[Tuple[Dict[str], float]]: list of tuples of x and y values
