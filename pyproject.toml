@@ -24,7 +24,7 @@ exclude = '''
 
 [tool.poetry]
 name = "lipo"
-readme = 'README.md'  # Markdown files are supported
+readme = 'Readme.md'  # Markdown files are supported
 version = "1.2.1"
 
 authors = ["Jan Beitner"]
