@@ -35,7 +35,6 @@ class LIPOSearchCV(BaseSearchCV):
         random_state=None,
         scoring=None,
         n_jobs=None,
-        iid="deprecated",
         refit=True,
         cv=None,
         verbose=0,
@@ -44,8 +43,6 @@ class LIPOSearchCV(BaseSearchCV):
         return_train_score=False,
     ):
         """
-        Initialize self
-
         Args:
             estimator (BaseEstimator): estimator to tune
             param_space (Dict[str, List]): dictionary where keys are names of parameters to tune and
@@ -72,7 +69,6 @@ class LIPOSearchCV(BaseSearchCV):
                 Continue with global search.
             scoring (Union[str, callable, List, Tuple, Dict, None]: as in sklearn.model_selection.GridSearchCV
             n_jobs (int): number of jobs for cross validation
-            iid (bool): deprecated
             refit (bool): if to refit estimator with best parameters at the end
             cv (Union[int, iterable]): number of folds or iterable returning indices of (train, test)
             verbose (int): verbosity level
@@ -93,7 +89,6 @@ class LIPOSearchCV(BaseSearchCV):
             estimator=estimator,
             scoring=scoring,
             n_jobs=n_jobs,
-            iid=iid,
             refit=refit,
             cv=cv,
             verbose=verbose,
