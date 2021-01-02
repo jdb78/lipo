@@ -120,10 +120,7 @@ class LIPOSearchCV(BaseSearchCV):
             maximize=True,
             random_state=self.random_state,
         )
-        if self.multimetric_:
-            metric = self.refit
-        else:
-            metric = "score"
+        metric = "score"
 
         iteration = 0
         t = tqdm(total=self.n_iter, desc="Best params at iteration --- with score ----", mininterval=10.0)
