@@ -156,7 +156,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
 name = "dlib"
-version = "19.23.0"
+version = "19.23.1"
 description = "A toolkit for making real world machine learning and data analysis applications"
 category = "main"
 optional = false
@@ -1248,7 +1248,7 @@ defusedxml = [
     {file = "defusedxml-0.6.0.tar.gz", hash = "sha256:f684034d135af4c6cbb949b8a4d2ed61634515257a67299e5f940fbaa34377f5"},
 ]
 dlib = [
-    {file = "dlib-19.23.0.tar.gz", hash = "sha256:d026f70185d243b4e7cc20c5eece71e744edadb6cc7a7783dd98cb97c5a11f20"},
+    {file = "dlib-19.23.1.tar.gz", hash = "sha256:aaeb7d1a5a22c2a00d8a99311630d8187b42b369bc378c8751e8b972f6cd4126"},
 ]
 docutils = [
     {file = "docutils-0.16-py2.py3-none-any.whl", hash = "sha256:0c5b78adfbf7762415433f5515cd5c9e762339e23369dbe8000d84a4bf4ab3af"},
