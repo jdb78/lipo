@@ -64,7 +64,7 @@ print(search.best_params_)
 
 # Comparison to other frameworks
 
-For benchmarks, see the notebook in the `benchmark` directory.
+For benchmarks, see the [notebook](benchmarks/benchmarks.ipynb) in the `benchmark` directory.
 
 ## [scikit-optimize](https://scikit-optimize.github.io/)
 
