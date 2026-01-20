@@ -108,6 +108,9 @@ class GlobalOptimizer:
         self.lower_bounds = lower_bounds
         self.upper_bounds = upper_bounds
         for name, cats in self.categories.items():
+            # we dont need to check both, lower and upper bounds
+            if name in lower_bounds:
+                continue
             self.lower_bounds[name] = 0
             self.upper_bounds[name] = len(cats) - 1
 
